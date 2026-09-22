@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情绪日记 · 寄一封信给风</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: "Songti SC", "STSong", Georgia, serif;
+  }
+
+  /* ---------- 天空 ---------- */
+  .sky {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, #a8c8e8 0%, #cfe0f0 45%, #e8e2d4 100%);
+    transition: filter 1.2s ease;
+  }
+  body.sent .sky { filter: brightness(1.08) saturate(1.05); }
+
+  .sun {
+    position: absolute;
+    top: 8%; right: 12%;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff7e0 0%, #ffe9b0 55%, rgba(255,233,176,0) 75%);
+    opacity: .9;
+  }
+
+  .cloud {
+    position: absolute;
+    background: rgba(255,255,255,.85);
+    border-radius: 100px;
+    filter: blur(2px);
+    animation: drift linear infinite;
+  }
+  .cloud::before, .cloud::after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+  }
+  .c1 { width: 150px; height: 44px; top: 14%; left: -180px; animation-duration: 60s; }
+  .c1::before { width: 60px; height: 60px; top: -28px; left: 25px; }
+  .c1::after  { width: 44px; height: 44px; top: -18px; left: 80px; }
+  .c2 { width: 110px; height: 34px; top: 30%; left: -140px; animation-duration: 85s; animation-delay: -30s; opacity: .7; }
+  .c2::before { width: 46px; height: 46px; top: -22px; left: 18px; }
+  .c2::after  { width: 34px; height: 34px; top: -14px; left: 60px; }
+  .c3 { width: 190px; height: 52px; top: 8%; left: -220px; animation-duration: 110s; animation-delay: -70s; opacity: .6; }
+  .c3::before { width: 70px; height: 70px; top: -34px; left: 35px; }
+  .c3::after  { width: 52px; height: 52px; top: -24px; left: 105px; }
+
+  @keyframes drift {
+    to { transform: translateX(calc(100vw + 400px)); }
+  }
+
+  /* ---------- 窗框 ---------- */
+  .window {
+    position: fixed;
+    left: 50%;
+    top: 6vh;
+    transform: translateX(-50%);
+    width: min(560px, 86vw);
+    height: 38vh;
+    border: 14px solid #6d4c33;
+    border-radius: 6px;
+    box-shadow:
+      inset 0 0 0 3px #8a6845,
+      0 18px 40px rgba(60, 40, 20, .28);
+    background: transparent;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .window::before, .window::after {
+    content: "";
+    position: absolute;
+    background: #6d4c33;
+  }
+  .window::before { left: 50%; top: 0; bottom: 0; width: 10px; transform: translateX(-50%); }
+  .window::after  { top: 50%; left: 0; right: 0; height: 10px; transform: translateY(-50%); }
+  .sill {
+    position: fixed;
+    left: 50%;
+    top: calc(6vh + 38vh + 8px);
+    transform: translateX(-50%);
+    width: min(620px, 92vw);
+    height: 14px;
+    background: linear-gradient(180deg, #7d5a3c, #5c4028);
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 10px 24px rgba(60, 40, 20, .3);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ---------- 场景文字 ---------- */
+  .scene-title {
+    position: fixed;
+    top: calc(6vh + 38vh + 40px);
+    left: 50%;
+    transform: translateX(-50%);
+    color: #5a4632;
+    letter-spacing: .35em;
+    font-size: 14px;
+    opacity: .75;
+    z-index: 3;
+    white-space: nowrap;
+    transition: opacity .8s;
+  }
+  body.sent .scene-title { opacity: 0; }
+
+  /* ---------- 信纸 ---------- */
+  .desk {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: 46vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1400px;
+    z-index: 5;
+  }
+
+  .paper {
+    width: min(480px, 84vw);
+    height: 40vh;
+    min-height: 240px;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 33px,
+        rgba(160, 130, 90, .28) 33px,
+        rgba(160, 130, 90, .28) 34px
+      ),
+      linear-gradient(160deg, #fdfaf2 0%, #f7f0e0 100%);
+    border-radius: 4px;
+    box-shadow: 0 14px 34px rgba(80, 55, 25, .25), 0 2px 6px rgba(80,55,25,.15);
+    padding: 18px 26px 60px;
+    position: relative;
+    transform-origin: 50% 100%;
+    transition: transform 1.1s cubic-bezier(.6,.05,.3,1), opacity .9s ease .35s;
+  }
+
+  /* 折叠成纸飞机：纵向对折 -> 再对折 -> 收成尖条 */
+  .paper.folding {
+    animation: fold 1.4s cubic-bezier(.55,.06,.35,.95) forwards;
+  }
+  @keyframes fold {
+    0%   { transform: rotateX(0) scale(1); }
+    30%  { transform: rotateX(-58deg) scale(1, .55); }
+    60%  { transform: rotateX(-12deg) scale(.62, .3); }
+    100% { transform: rotateX(-25deg) scale(.3, .1) rotate(-8deg); opacity: 0; }
+  }
+
+  .paper textarea {
+    width: 100%;
+    height: calc(100% - 44px);
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 34px;
+    color: #4a3a28;
+    caret-color: #a2703f;
+  }
+  .paper textarea::placeholder { color: #b3a184; }
+
+  .paper .send-row {
+    position: absolute;
+    left: 0; right: 0; bottom: 14px;
+    display: flex;
+    justify-content: center;
+  }
+  .send-btn {
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: .25em;
+    padding: 9px 28px 9px 32px;
+    color: #f7efdd;
+    background: linear-gradient(160deg, #8a6845, #6d4c33);
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(90, 60, 30, .35);
+    transition: transform .2s, box-shadow .2s, opacity .3s;
+  }
+  .send-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(90, 60, 30, .4); }
+  .send-btn:disabled { opacity: 0; pointer-events: none; }
+
+  /* ---------- 纸飞机 ---------- */
+  .plane {
+    position: fixed;
+    left: 50%;
+    bottom: 40vh;
+    width: 90px;
+    z-index: 6;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+  .plane.fly {
+    opacity: 1;
+    animation: fly 3.4s cubic-bezier(.4,.1,.45,.9) forwards;
+  }
+  @keyframes fly {
+    0%   { transform: translate(-50%, 0) rotate(-10deg) scale(1); opacity: 1; }
+    18%  { transform: translate(calc(-50% - 14vw), -16vh) rotate(-26deg) scale(.92); opacity: 1; }
+    42%  { transform: translate(calc(-50% + 6vw), -40vh) rotate(-4deg) scale(.8); opacity: 1; }
+    68%  { transform: translate(calc(-50% + 22vw), -62vh) rotate(-18deg) scale(.6); opacity: 1; }
+    100% { transform: translate(calc(-50% + 44vw), -95vh) rotate(-30deg) scale(.35); opacity: 0; }
+  }
+
+  /* ---------- 寄出后的回声 ---------- */
+  .echo {
+    position: fixed;
+    left: 50%;
+    bottom: 20vh;
+    transform: translateX(-50%) translateY(12px);
+    text-align: center;
+    color: #5a4632;
+    opacity: 0;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    z-index: 7;
+    pointer-events: none;
+  }
+  .echo.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .echo .line1 { font-size: 20px; letter-spacing: .3em; margin-bottom: 14px; }
+  .echo .line2 { font-size: 13px; letter-spacing: .2em; opacity: .7; margin-bottom: 26px; }
+  .again {
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: .2em;
+    padding: 8px 24px;
+    color: #6d4c33;
+    background: transparent;
+    border: 1px solid #a9885f;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background .25s, color .25s;
+  }
+  .again:hover { background: #6d4c33; color: #f7efdd; }
+</style>
+</head>
+<body>
+
+  <div class="sky">
+    <div class="sun"></div>
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+  </div>
+
+  <div class="window"></div>
+  <div class="sill"></div>
+  <div class="scene-title">把心事写给窗外</div>
+
+  <!-- 信纸 -->
+  <div class="desk">
+    <div class="paper" id="paper">
+      <textarea id="letter" placeholder="此刻的心情，写下来就好。&#10;写完，折成纸飞机，寄给风。"></textarea>
+      <div class="send-row">
+        <button class="send-btn" id="sendBtn">折起来，寄出去</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 纸飞机 -->
+  <svg class="plane" id="plane" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="0,32 100,0 44,42" fill="#faf3e3"/>
+    <polygon points="44,42 100,0 58,70" fill="#e6d9bf"/>
+    <line x1="44" y1="42" x2="100" y2="0" stroke="#c9b48c" stroke-width="1"/>
+  </svg>
+
+  <!-- 寄出后的回声 -->
+  <div class="echo" id="echo">
+    <div class="line1">信已寄出</div>
+    <div class="line2">风会替你收好，这一刻的情绪</div>
+    <button class="again" id="againBtn">再写一封</button>
+  </div>
+
+<script>
+  const paper   = document.getElementById('paper');
+  const plane   = document.getElementById('plane');
+  const echo    = document.getElementById('echo');
+  const sendBtn = document.getElementById('sendBtn');
+  const againBtn = document.getElementById('againBtn');
+  const letter  = document.getElementById('letter');
+
+  sendBtn.addEventListener('click', () => {
+    sendBtn.disabled = true;
+    letter.blur();
+    document.body.classList.add('sent');
+    paper.classList.add('folding');
+
+    // 折纸动画结束后，飞机起飞
+    setTimeout(() => {
+      plane.classList.add('fly');
+    }, 1250);
+
+    // 飞机飞远后，显示回声
+    setTimeout(() => {
+      echo.classList.add('show');
+    }, 4200);
+  });
+
+  againBtn.addEventListener('click', () => {
+    echo.classList.remove('show');
+    plane.classList.remove('fly');
+    paper.classList.remove('folding');
+    letter.value = '';
+    sendBtn.disabled = false;
+    document.body.classList.remove('sent');
+    letter.focus();
+  });
+</script>
+</body>
+</html>
