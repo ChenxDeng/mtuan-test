@@ -1,6 +1,7 @@
 // Each paper object has an independent damped spring and stationary hit area.
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const profiles = {
+  history: { lift: 9, lean: -2.8, pitch: 3, phase: 1.6 },
   pink: { lift: 15, lean: -4.2, pitch: 5, phase: .7 },
   blue: { lift: 17, lean: 3.6, pitch: -4, phase: 2.3 },
   letter: { lift: 12, lean: -1.6, pitch: 3, phase: 4.1 },
@@ -84,7 +85,6 @@ for (const button of document.querySelectorAll('.keepsake')) {
     if (event.key === 'Escape') { button.blur(); hovered = false; wake(); }
   });
   reducedMotion.addEventListener('change', wake);
-  // Deliberately no click action in this preview.
 }
 
 /* ===== 进场提示与闲置提醒：抬一下、放回去，示意可交互 ===== */
@@ -101,7 +101,7 @@ addEventListener('keydown', noteActivity);
 function deskIdle() {
   const desk = document.querySelector('.desk');
   const zone = document.querySelector('.launch-zone');
-  return desk.hidden && zone.hidden; // no panel open, no plane in play
+  return desk.hidden && zone.hidden && document.querySelector('.history-panel').hidden;
 }
 setInterval(() => {
   if (document.hidden || performance.now() - lastActivity < 10000) return;
@@ -115,6 +115,9 @@ setInterval(() => {
   const letterButton = document.querySelector('.keepsake--letter');
   const blueButton = document.querySelector('.keepsake--blue');
   const pinkButton = document.querySelector('.keepsake--pink');
+  const historyButton = document.querySelector('.keepsake--history');
+  const historyPanel = document.querySelector('.history-panel');
+  const historyClose = historyPanel.querySelector('.history-close');
   const desk = document.querySelector('.desk');
   const paper = desk.querySelector('.paper');
   const input = desk.querySelector('.paper-input');
@@ -139,7 +142,7 @@ setInterval(() => {
     [0.570, 0.466], // 没入远处楼群
   ];
 
-  let state = 'idle'; // idle | writing | reading | sharing | folding | follow | launched
+  let state = 'idle'; // idle | history | writing | reading | sharing | folding | follow | launched
   let plane = { x: 0, y: 0, vx: 0, vy: 0, angle: -30, scale: 1, opacity: 0 };
   let mouse = { x: innerWidth / 2, y: innerHeight / 2 };
   let followFrame = 0, followPrev = 0;
@@ -149,7 +152,9 @@ setInterval(() => {
   const PANEL_MODES = { writing: 'write', reading: 'reply', sharing: 'share' };
   function openDesk(mode) {
     if (PANEL_MODES[state] === mode) return; // already open
-    if (state !== 'idle' && !PANEL_MODES[state]) return; // mid flight/fold
+    if (state !== 'idle' && state !== 'history' && !PANEL_MODES[state]) return; // mid flight/fold
+    historyPanel.hidden = true;
+    historyButton.setAttribute('aria-expanded', 'false');
     state = mode === 'write' ? 'writing' : mode === 'reply' ? 'reading' : 'sharing';
     input.hidden = mode !== 'write';
     paperRead.hidden = mode !== 'reply';
@@ -170,6 +175,21 @@ setInterval(() => {
     shareInput.value = '';
     foldButton.disabled = true;
   }
+  function closeHistory(restoreFocus = false) {
+    historyPanel.hidden = true;
+    historyButton.setAttribute('aria-expanded', 'false');
+    if (state === 'history') state = 'idle';
+    if (restoreFocus) historyButton.focus({ preventScroll: true });
+  }
+  historyButton.addEventListener('click', () => {
+    if (state === 'history') { closeHistory(); return; }
+    if (state !== 'idle' && !PANEL_MODES[state]) return;
+    closeDesk();
+    state = 'history';
+    historyPanel.hidden = false;
+    historyButton.setAttribute('aria-expanded', 'true');
+  });
+  historyClose.addEventListener('click', () => closeHistory(true));
   letterButton.addEventListener('click', () => openDesk('write'));
   blueButton.addEventListener('click', () => openDesk('reply'));
   pinkButton.addEventListener('click', () => openDesk('share'));
@@ -177,10 +197,15 @@ setInterval(() => {
     if (state === 'writing') foldButton.disabled = !input.value.trim();
   });
   addEventListener('keydown', event => {
+    if (event.key === 'Escape' && state === 'history') closeHistory(true);
     if (event.key === 'Escape' && (state === 'writing' || state === 'reading' || state === 'sharing')) closeDesk();
   });
   /* 点击信纸以外的区域即退出；点别的飞机则切换面板 */
   addEventListener('click', event => {
+    if (state === 'history') {
+      if (!historyPanel.contains(event.target) && !historyButton.contains(event.target)) closeHistory();
+      return;
+    }
     if (!PANEL_MODES[state]) return;
     if (desk.contains(event.target)) return;
     if (event.target.closest && event.target.closest('.keepsake')) return;

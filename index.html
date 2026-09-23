@@ -9,8 +9,8 @@
 <link rel="icon" href="data:,">
 <link rel="preload" href="assets/fonts/AmaticaSC-Regular.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preload" href="assets/city-scene-clean.png" as="image">
-<link rel="stylesheet" href="styles.css">
-<script src="app.js" defer></script>
+<link rel="stylesheet" href="styles.css?v=history-layout-3">
+<script src="app.js?v=history-folder-2" defer></script>
 </head>
 <body>
 <main class="room" aria-label="窗边的情绪日记">
@@ -25,6 +25,11 @@
     <div class="launch-zone" hidden>
       <span class="zone-text">拖动到这里<br>点击扔出</span>
     </div>
+    <button class="keepsake keepsake--history" type="button" data-piece="history" aria-label="历史记录" aria-describedby="hint-history" aria-controls="history-panel" aria-expanded="false">
+      <span class="object-shadow" aria-hidden="true"><img src="assets/parts/city-history-folder.png" alt="" draggable="false"></span>
+      <span class="object-body"><img src="assets/parts/city-history-folder.png" alt="" draggable="false"></span>
+      <span class="hint" id="hint-history" role="tooltip">历史记录</span>
+    </button>
     <button class="keepsake keepsake--pink" type="button" data-piece="pink" aria-label="别人的烦恼" aria-describedby="hint-pink">
       <span class="object-shadow" aria-hidden="true"><img src="assets/parts/city-plane-left.png" alt="" draggable="false"></span>
       <span class="object-body"><img src="assets/parts/city-plane-left.png" alt="" draggable="false"></span>
@@ -71,6 +76,24 @@
       </div>
     </div>
     <button class="fold-button" type="button" disabled>折起来，让它飞走</button>
+  </aside>
+  <aside class="history-panel" id="history-panel" aria-labelledby="history-title" hidden>
+    <header class="history-header">
+      <div><p class="history-eyebrow">那些交给风的心事</p><h2 id="history-title">历史记录</h2></div>
+      <button class="history-close" type="button" aria-label="收起历史记录">×</button>
+    </header>
+    <ol class="history-list">
+      <li><div class="history-meta"><time datetime="2026-09-22">09.22</time><span>有点焦虑</span></div><p>秋招好累，希望早点收到好消息。</p></li>
+      <li><div class="history-meta"><time datetime="2026-09-20">09.20</time><span>有些疲惫</span></div><p>待办又堆满了，今天先到这里吧。</p></li>
+      <li><div class="history-meta"><time datetime="2026-09-18">09.18</time><span>有点低落</span></div><p>总在意别人的看法，想对自己好一点。</p></li>
+      <li><div class="history-meta"><time datetime="2026-09-16">09.16</time><span>轻松一点</span></div><p>出去走了走，心情也透了口气。</p></li>
+    </ol>
+    <footer class="history-summary">
+      <p class="history-stats">近 7 天 <span>4 次记录 · 5 份鼓励</span></p>
+      <p>最近压力有点大，可以多看看窗外。</p>
+      <p>得到了 5 位伙伴的鼓励，你不是一个人～</p>
+      <small>演示记录</small>
+    </footer>
   </aside>
   <p class="credit">created by Chenxi Deng</p>
 </main>
