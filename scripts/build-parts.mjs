@@ -1,0 +1,23 @@
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const sharp = require('/Users/sisi/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp');
+// Cut approved source pixels into separately movable artwork layers.
+const raster = (await readFile(new URL('../assets/city-scene-original.png', import.meta.url))).toString('base64');
+const parts = [
+  { name: 'city-pink-plane', box: [578, 691, 105, 88], path: 'M584.3 771.6 L609.6 697.3 L637.8 699.7 L640.3 704.8 L644.1 700.5 L675.1 702.8 L662.1 715.3 L661.3 728.3 Z' },
+  { name: 'city-blue-plane', box: [712, 697, 105, 80], rotate: 'rotate(180 764 736)', path: 'M719.8 704.1 L809 741.9 L786.7 748 L784.8 760 L776.2 753.8 L755 767.7 L729.6 729 Z' },
+  { name: 'city-letter-pen', box: [882, 691, 244, 90], path: 'M895.8 724.9 L999.4 697.3 L1047.9 726.7 L1080 735.8 L1108 744.6 Q1119 746.7 1117 755 Q1116 760 1107 757.5 L1057 745.8 L957.5 774.2 L950.5 771 L889.5 738.7 L901.5 733 Z' },
+  { name: 'city-cloud-left', box: [654, 294, 116, 39], path: 'M657.5 325.5 Q664 319 669.8 315 Q669.5 309.5 678.8 307 Q684 305.5 689 309 Q694 310 695.5 303.5 Q701 297 708.5 297 Q719 296 723 303 Q725.5 306.3 724 309.7 Q729 313 736 310.5 Q743.5 310 745 317.5 Q751.3 316.8 753.9 320.5 L762.5 321 Q768 321.5 767 325 L748.5 326.3 L748.1 329.4 Q709 332 690 329.3 L658 329 Z' },
+  { name: 'city-cloud-small', box: [768, 327, 89, 27], path: 'M772.5 348 Q777.5 344 784.8 343.2 Q790 337 794.8 338 Q795.6 332 803.7 331 Q812 328.7 817.8 334.4 L818.2 339.8 Q825 342.5 828.3 340.2 L833.8 344.2 L843 344 Q848 346 852 346 L855 349 Q817 353 773 351.1 Z' },
+  { name: 'city-cloud-high', box: [855, 255, 109, 44], path: 'M859.4 289.7 Q859 283 869 281.5 L878.8 281 Q878.8 272 890.2 272.3 L896.3 273 Q901 269 901.1 264.8 Q906 258.1 914.2 259.1 Q922.2 259.1 922.7 268.7 Q927 272 933 269.9 Q940.1 271.6 940.5 277.8 Q941 280.7 947 279.2 Q958.3 280 960.3 287 Q961 291.8 954 292 Q929 296 918 293.9 Q908 296 899 293.6 L862 293 Z' },
+];
+await mkdir(new URL('../assets/parts/', import.meta.url), { recursive: true });
+for (const part of parts) {
+  const [x, y, width, height] = part.box;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${x} ${y} ${width} ${height}"><defs><clipPath id="outline"><path d="${part.path}"/></clipPath></defs><g transform="${part.rotate || ''}"><image width="1666" height="944" href="data:image/png;base64,${raster}" clip-path="url(#outline)"/></g></svg>`;
+  await writeFile(new URL(`../assets/parts/${part.name}.svg`, import.meta.url), svg);
+  await sharp(Buffer.from(svg)).png().toFile(new URL(`../assets/parts/${part.name}.png`, import.meta.url).pathname);
+}
+await writeFile(new URL('../assets/city-parts.json', import.meta.url), JSON.stringify(parts, null, 2));
+console.log('Built two planes, the combined letter/pen, and three original cloud layers.');

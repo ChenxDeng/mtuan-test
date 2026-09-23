@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'Amatica SC';
+  src: url('assets/fonts/AmaticaSC-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; min-height: 100%; }
+body { background: #faf7f0; color: #25211e; }
+button { font: inherit; }
+.room { position: relative; height: 100svh; min-height: 320px; overflow: hidden; isolation: isolate; }
+.scene {
+  position: absolute; left: 50%; top: 50%;
+  width: max(100vw, 176.4831svh); aspect-ratio: 1666 / 944;
+  transform: translate(-50%, -50%);
+}
+.scene-background { display: block; width: 100%; height: 100%; user-select: none; pointer-events: none; }
+.wordmark {
+  position: absolute; z-index: 2; left: 8%; top: 37.8%;
+  display: flex; flex-direction: column; gap: 2.65vw; margin: 0;
+  font-family: 'Amatica SC', 'Arial Narrow', sans-serif;
+  font-size: clamp(48px, 5.7vw, 132px); font-weight: 400; line-height: 1.05; letter-spacing: .035em;
+}
+.wordmark span { display: block; }
+.keepsake {
+  position: absolute; z-index: 3; margin: 0; padding: 0; border: 0; border-radius: 8px;
+  background: none; appearance: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  outline: none; touch-action: manipulation; overflow: visible;
+  /* A stationary hit area prevents a lifted object from losing hover. */
+}
+.keepsake--pink { left: 34.69388%; top: 73.19915%; width: 6.30252%; height: 9.32203%; }
+.keepsake--blue { left: 42.73709%; top: 73.83475%; width: 6.30252%; height: 8.47458%; }
+.keepsake--letter { left: 52.94118%; top: 73.19915%; width: 14.64586%; height: 9.53390%; }
+.keepsake:focus-visible { outline: 1px dashed #937960; outline-offset: 7px; }
+.keepsake.is-awake { z-index: 5; }
+.object-body, .object-shadow { position: absolute; inset: 0; display: block; pointer-events: none; }
+.object-body { transform-origin: 50% 65%; backface-visibility: hidden; }
+.object-body img, .object-shadow img { display: block; width: 100%; height: 100%; user-select: none; }
+.object-shadow { opacity: .045; filter: brightness(0) blur(1px); transform: translate(1px, 1px); }
+.keepsake.is-awake .object-body { will-change: transform; }
+.hint {
+  position: absolute; left: 50%; bottom: calc(100% + 17px);
+  display: block; padding: 7px 11px 8px;
+  color: #6c5848; background: rgba(255, 252, 246, .92);
+  border: 1px solid rgba(158, 127, 96, .16); border-radius: 5px 8px 6px 9px;
+  box-shadow: 0 3px 12px rgba(100, 72, 46, .045);
+  font: 400 clamp(12px, 1vw, 16px)/1.5 'Songti SC', 'Noto Serif CJK SC', 'STSong', serif;
+  letter-spacing: .13em; white-space: nowrap;
+  opacity: 0; visibility: hidden; transform: translate(-50%, 5px);
+  transition: opacity 220ms ease, transform 320ms ease, visibility 220ms;
+  pointer-events: none;
+}
+.keepsake.is-active .hint { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition-delay: 110ms; }
+@media (max-aspect-ratio: 1/1) {
+  .room { background: url('assets/city-scene-clean.png') left top / auto 250svh; }
+  .scene { width: min(208vw, 140svh); top: 62%; mask-image: linear-gradient(transparent, #000 9%, #000 91%, transparent); }
+  .wordmark { left: 12%; top: 9%; font-size: clamp(44px, 10vw, 64px); gap: 2vw; }
+  .hint { font-size: 13px; bottom: calc(100% + 14px); }
+}
+@media (prefers-reduced-motion: reduce) { .hint { transition: opacity 120ms; } }
+
+/* Clouds are separate original-art cutouts; clip them behind the window and roofs. */
+.cloud-layer { position: absolute; inset: 0; pointer-events: none; clip-path: polygon(37.815% 18.114%, 62.785% 18.114%, 58.703% 22.669%, 58.643% 31.886%, 54.922% 36.441%, 54.922% 39.619%, 41.056% 39.619%, 40.456% 36.653%, 39.916% 34.852%, 39.976% 33.051%, 39.016% 31.992%, 37.815% 31.992%); }
+.cloud { position: absolute; display: block; user-select: none; will-change: transform; }
+.cloud--left { left: 39.25570%; top: 31.14407%; width: 6.96279%; height: 4.13136%; }
+.cloud--small { left: 46.09844%; top: 34.63983%; width: 5.34214%; height: 2.86017%; }
+.cloud--high { left: 51.32053%; top: 27.01271%; width: 6.54262%; height: 4.66102%; }
+.cloud--left { animation: cloud-left 48s linear -12s infinite; }
+.cloud--small { animation: cloud-small 57s linear -23s infinite; }
+.cloud--high { animation: cloud-high 43s linear -28s infinite; }
+/* Travel continuously across the sky; wrap only when fully behind its boundaries. */
+@keyframes cloud-left { from { transform: translate(-120%, 0); } to { transform: translate(310%, 0); } }
+@keyframes cloud-small { from { transform: translate(-240%, 0); } to { transform: translate(270%, 0); } }
+@keyframes cloud-high { from { transform: translate(-300%, 0); } to { transform: translate(140%, 0); } }
+@media (prefers-reduced-motion: reduce) { .cloud { animation: none; will-change: auto; } }

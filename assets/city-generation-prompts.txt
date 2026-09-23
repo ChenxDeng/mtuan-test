@@ -1,0 +1,22 @@
+Mode: built-in image_gen
+Source: Codex 图像 2026年9月23日 09_26_44.png
+Edited source: city-scene-original.png
+Restored background: city-scene-clean.png
+
+AIRPLANE EDIT
+Precise edit of the supplied hand-drawn city-window illustration. Keep the entire image and its exact style/composition unchanged, including wall, window, European street, clouds, right-hand letter sheets with writing and fountain pen.
+Change ONLY the TWO small paper airplanes on the LEFT windowsill:
+- Rotate them to face diagonally INWARD toward the room/viewer. Each single pointed NOSE must lie closer to the FRONT sill edge (LOWER on the image) than its wide wing/tail ends, as if each has flown in through the window and landed.
+- Left airplane nose points down-left, about 45 degrees to horizontal. Right airplane nose points down-right, about 25 degrees to horizontal. Noticeably DIFFERENT yaw angles, not an identical or mirror-symmetric pair. Recognizable folded paper airplane geometry and hand-drawn brown outlines.
+- Very faint pinkish-white wash for left airplane, very faint powder-blue wash for right airplane, harmonizing with the existing muted paper/blue palette. No saturated colors.
+Keep the same size, area and separation of airplanes on the sill. Preserve the original continuous irregular brown pencil outlines, paper texture, nearly white sill, all other colors and shapes. Do not restyle or enlarge anything, no new content, no words except existing handwritten lines on the letter, no cropping. This is a local object edit only.
+
+BACKGROUND RESTORATION
+Precise background restoration of this exact illustration. Remove the following movable objects completely:
+1) Both paper airplanes from the left windowsill.
+2) The entire stack of letter sheets AND the fountain pen lying on them from the right windowsill.
+3) All THREE cream-colored clouds from the blue sky.
+
+Reconstruct the bare off-white windowsill beneath the removed objects, with the same very subtle original paper grain and NO new lines or objects. Preserve every outer brown contour of the windowsill, its front edge and shape exactly. Reconstruct uninterrupted textured pale blue sky where the clouds were; match the surrounding painted blue and its subtle paper texture so there are NO white ghosts or cloud outlines left.
+
+Keep EVERYTHING ELSE exactly identical, especially the original window dimensions and position, casement doors, full hand-drawn European city street, buildings, trees, brown outlines, wall, wide margins, and camera framing. No redrawing, restyling, simplification, resizing or recoloring. Output the exact same landscape canvas and image dimensions, with an empty windowsill and cloudless sky.

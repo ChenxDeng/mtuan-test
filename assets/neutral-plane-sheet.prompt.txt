@@ -1,0 +1,15 @@
+Mode: built-in image_gen
+Source: city-scene-original.png (drawing style only)
+Output: neutral-plane-sheet.png
+
+Create a transparent PNG SPRITE SHEET of exactly TWO separately isolated WHITE PAPER AIRPLANES for the supplied hand-drawn window illustration. The supplied image is ONLY a style reference for warm-brown continuous pencil outlines and the simple paper object drawing. Do not draw any background, window, scene, text, frame, labels or shadow. Genuine transparent alpha around both objects.
+
+Layout: landscape sheet, left plane fully within left 45% of canvas, right plane fully within right 45%, large transparent gap between them, neither overlaps the center dividing line, ample padding. Both airplanes similar physical size. Each fills most of its half of the sheet. Two objects only.
+
+Material and style: uncolored ivory/off-white folded paper, NO pink, NO blue, NO colored tint. Delicate slightly irregular single-pass dark warm brown pencil contours of consistent moderate thickness, just a few natural fold lines, extremely restrained warm grey-beige shading on the undersides. Match the source illustration's sparse naive hand-drawn linework, no crosshatching, no photorealistic texture, no thick cartoon outlines.
+
+CRITICAL PHYSICAL GEOMETRY:
+Both are normal classic folded dart paper airplanes, drawn resting upright on the SAME horizontal windowsill plane, seen from ABOVE at a 35-degree viewing angle. We see the TOPS of both triangular wings and the central raised fold. Wing planes obey one consistent perspective, wings connected naturally along the central fold; both wings have plausible foreshortening. No impossible standing wing, no upside-down airplane, no flipped 2D image, no interpenetrating triangles, no extra fins or tails. Show a recognizable nose, two wings, and a small central keel only.
+LEFT plane: nose points diagonally DOWN-LEFT toward the viewer (around 7:30 clock direction). Rear wide wing ends point UP-RIGHT. Slightly steeper diagonal axis.
+RIGHT plane: nose points diagonally DOWN-RIGHT toward the viewer (around 4:00 clock direction). Rear wide wing ends point UP-LEFT. Its axis is less steep than the left airplane, roughly 25 degrees below horizontal. This must be a newly drawn 3D perspective viewed from above, NOT simply rotating an upside-down plane drawing. TOP wing surfaces visible, fold ridge on top, hidden underside minimally visible below wings. The two planes have DIFFERENT believable yaw angles but share the same viewing elevation and ground plane. Both look as if they have flown from outdoors inward and just landed.
+Do not render the ground plane. No baked cast shadows; transparent cutouts for CSS shadows.

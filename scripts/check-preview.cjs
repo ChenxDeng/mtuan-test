@@ -1,0 +1,45 @@
+const { chromium } = require('/Users/sisi/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs = require('node:fs');
+(async () => {
+  const browser = await chromium.launch({ headless: true, executablePath: '/Users/sisi/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing' });
+  const page = await browser.newPage({ viewport: { width: 1672, height: 941 }, deviceScaleFactor: 1 });
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
+  await page.goto('http://127.0.0.1:8734', { waitUntil: 'networkidle' });
+  await page.evaluate(() => document.fonts.ready);
+  fs.mkdirSync('output/preview', { recursive: true });
+  await page.screenshot({ path: 'output/preview/desktop.png' });
+  const checks = { font: await page.evaluate(() => document.fonts.check('80px "Amatica SC"')), errors, hovers: [] };
+  const cloudBefore = await page.locator('.cloud').evaluateAll(els => els.map(el => getComputedStyle(el).transform));
+  await page.waitForTimeout(1600);
+  const cloudAfter = await page.locator('.cloud').evaluateAll(els => els.map(el => getComputedStyle(el).transform));
+  checks.cloudsMoving = cloudAfter.length === 3 && cloudAfter.every((value, i) => value !== cloudBefore[i]);
+  checks.letterAndPenTogether = await page.locator('[data-piece="letter"] .object-body img').getAttribute('src') === 'assets/parts/city-letter-pen.png';
+  for (const id of ['pink', 'blue', 'letter']) {
+    const button = page.locator(`[data-piece="${id}"]`);
+    await button.hover();
+    await page.waitForTimeout(850);
+    checks.hovers.push(await button.evaluate(el => ({ name: el.ariaLabel, hint: getComputedStyle(el.querySelector('.hint')).opacity, transform: el.querySelector('.object-body').style.transform, shadow: el.querySelector('.object-shadow').style.opacity })));
+    await page.screenshot({ path: `output/preview/hover-${id}.png` });
+    await page.mouse.move(30, 30);
+    await page.waitForTimeout(1700);
+    checks.hovers[checks.hovers.length - 1].settled = await button.evaluate(el => el.querySelector('.object-body').style.transform === '');
+  }
+  await page.locator('[data-piece="pink"]').focus();
+  await page.waitForTimeout(500);
+  checks.keyboardFocus = await page.locator('[data-piece="pink"]').evaluate(el => el.classList.contains('is-active'));
+  await page.keyboard.press('Escape');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  checks.cloudsRespectReducedMotion = await page.locator('.cloud').evaluateAll(els => els.every(el => getComputedStyle(el).animationName === 'none'));
+  await page.locator('[data-piece="letter"]').hover();
+  await page.waitForTimeout(300);
+  checks.reducedMotion = await page.locator('[data-piece="letter"] .object-body').evaluate(el => el.style.transform);
+  await page.mouse.move(30, 30);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: 'output/preview/mobile.png' });
+  checks.mobile = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth, objects: [...document.querySelectorAll('.keepsake')].map(el => { const r = el.getBoundingClientRect(); return {name: el.ariaLabel, visible: r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight}; }) }));
+  fs.writeFileSync('output/preview/checks.json', JSON.stringify(checks, null, 2));
+  console.log(JSON.stringify(checks, null, 2));
+  await browser.close();
+})().catch(error => { console.error(error); process.exit(1); });

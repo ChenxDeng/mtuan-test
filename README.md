@@ -1,33 +1,25 @@
-# 情绪日记 · 寄一封信给风
+# OPEN WINDOW
 
-一个单文件、无后端的交互原型：在窗前的信纸上写下情绪，折起来寄出，看着纸飞机飞出窗外。
+情绪日记的窗边交互预览。静态 HTML、CSS、JavaScript，无构建依赖。
 
-## 运行
+## 本地预览
 
-无需构建，直接用浏览器打开 `index.html`。或者起一个本地静态服务：
+运行 `python3 -m http.server 8734 --bind 127.0.0.1`，打开 http://localhost:8734 。
 
-```bash
-python3 -m http.server 8734
-```
+粉色飞机、蓝色飞机、信纸与钢笔组合分别是独立图层，悬浮或键盘聚焦时会轻轻抬升、倾转，并出现阴影和提示。两个纸飞机的尖端以不同角度朝向室内。动效使用阻尼弹簧，响应鼠标在物件上的位置，移开后自然归位。
 
-然后访问 http://localhost:8734
+窗外的三朵原图云是独立图层，分别缓慢飘动，在窗框、树木和屋顶处被遮挡。云与悬浮都支持系统减少动态效果设置。
 
-## 交互流程
+本轮只实现「别人的烦恼」「我的回信」「写下烦恼」三个悬浮提示，不包含点击后的业务行为。
 
-1. 窗景（天空、飘动的云、木窗框）+ 一封可输入的信纸
-2. 点击「折起来，寄出去」
-3. 信纸折叠动画 → 纸飞机飞出窗外
-4. 显示「信已寄出」的回声
-5. 点「再写一封」重置
+## 素材
 
-## 说明
+- `assets/city-scene-clean.png`：基于用户提供的城市窗景，由内置 imagegen 移除飞机、信纸、钢笔和云后修复的背景。
+- `assets/city-scene-original.png`：调整飞机后的新底图；原始参考图仍保留在项目根目录。
+- `assets/parts/city-*.png`：透明拆件。两个飞机、信纸钢笔组合、三朵云，共六层。
+- `assets/parts/city-*.svg`：保留原图像素的裁切源文件；轮廓及蓝色飞机朝向变换见 `scripts/build-parts.mjs`，坐标见 `assets/city-parts.json`。构建脚本用 Sharp 将 SVG 导出为透明 PNG，网页本身无需依赖。
+- `assets/city-generation-prompts.txt`：背景修复与飞机修改的完整 imagegen 提示词。
+- `assets/fonts/AmaticaSC-Regular.ttf`：本地加载的 Amatica SC Regular；标题是 HTML 文本。
+- 字体来源：https://github.com/hafontia-zz/Amatica-sc ，许可见 `assets/fonts/OFL.txt`。
 
-所有内容仅存在于当前页面，不做任何存储与上传。
-
-## 文件结构
-
-```
-.
-├── index.html                       # 全部实现（HTML + CSS + JS）
-└── .workbuddy/memory/               # 开发过程记录
-```
+所有资源均本地加载，无数据采集或上传。
