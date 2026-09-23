@@ -22,6 +22,9 @@
       <img class="cloud cloud--small" src="assets/parts/city-cloud-small.png" alt="" draggable="false">
       <img class="cloud cloud--high" src="assets/parts/city-cloud-high.png" alt="" draggable="false">
     </div>
+    <div class="launch-zone" hidden>
+      <span class="zone-text">拖动到这里<br>点击扔出</span>
+    </div>
     <button class="keepsake keepsake--pink" type="button" data-piece="pink" aria-label="别人的烦恼" aria-describedby="hint-pink">
       <span class="object-shadow" aria-hidden="true"><img src="assets/parts/city-plane-left.png" alt="" draggable="false"></span>
       <span class="object-body"><img src="assets/parts/city-plane-left.png" alt="" draggable="false"></span>
@@ -38,6 +41,38 @@
       <span class="hint" id="hint-letter" role="tooltip">写下烦恼</span>
     </button>
   </div>
+  <div class="flight-plane" aria-hidden="true">
+    <img src="assets/parts/city-plane-right.png" alt="" draggable="false">
+  </div>
+  <aside class="desk" aria-label="写下烦恼的信纸" hidden>
+    <div class="paper-stage">
+      <div class="paper">
+        <div class="paper-half paper-half--top">
+          <div class="paper-face paper-face--front"><div class="paper-sheet"><p class="paper-text"></p></div></div>
+          <div class="paper-face paper-face--back"></div>
+        </div>
+        <div class="paper-half paper-half--bottom">
+          <div class="paper-face paper-face--front"><div class="paper-sheet"><p class="paper-text"></p></div></div>
+          <div class="paper-face paper-face--back"></div>
+        </div>
+        <textarea class="paper-input" placeholder="把一天的烦心事写下来飞走吧" rows="9" aria-label="把一天的烦心事写下来飞走吧"></textarea>
+        <div class="paper-read" hidden>
+          <p class="letter-date">2026年9月22日</p>
+          <p class="letter-body">秋招好辛苦呀，好想快点拿到offer，太累了，不知道这样的日子还要多久</p>
+          <p class="letter-reply"><span class="letter-reply-label">匿名回复：</span>加油！总有工作的，没那么好命一辈子不工作哈哈～</p>
+        </div>
+        <div class="paper-share" hidden>
+          <div class="share-top">
+            <p class="letter-date">2026年9月1日</p>
+            <p class="letter-body">又要开学了，好讨厌上学，开学考好担心考不好。</p>
+          </div>
+          <textarea class="share-input" placeholder="鼓励一下TA吧～" aria-label="鼓励一下TA吧"></textarea>
+        </div>
+      </div>
+    </div>
+    <button class="fold-button" type="button" disabled>折起来，让它飞走</button>
+  </aside>
+  <p class="credit">created by Chenxi Deng</p>
 </main>
 </body>
 </html>

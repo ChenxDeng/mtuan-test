@@ -15,8 +15,8 @@ button { font: inherit; }
 }
 .scene-background { display: block; width: 100%; height: 100%; user-select: none; pointer-events: none; }
 .wordmark {
-  position: absolute; z-index: 2; left: 8%; top: 37.8%;
-  display: flex; flex-direction: column; gap: 2.65vw; margin: 0;
+  position: absolute; z-index: 2; left: 8%; top: 32.5%;
+  display: flex; flex-direction: column; gap: 1.32vw; margin: 0;
   font-family: 'Amatica SC', 'Arial Narrow', sans-serif;
   font-size: clamp(48px, 5.7vw, 132px); font-weight: 400; line-height: 1.05; letter-spacing: .035em;
 }
@@ -43,7 +43,7 @@ button { font: inherit; }
   color: #6c5848; background: rgba(255, 252, 246, .92);
   border: 1px solid rgba(158, 127, 96, .16); border-radius: 5px 8px 6px 9px;
   box-shadow: 0 3px 12px rgba(100, 72, 46, .045);
-  font: 400 clamp(12px, 1vw, 16px)/1.5 'Songti SC', 'Noto Serif CJK SC', 'STSong', serif;
+  font: 400 clamp(12px, 1vw, 16px)/1.5 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   letter-spacing: .13em; white-space: nowrap;
   opacity: 0; visibility: hidden; transform: translate(-50%, 5px);
   transition: opacity 220ms ease, transform 320ms ease, visibility 220ms;
@@ -72,3 +72,176 @@ button { font: inherit; }
 @keyframes cloud-small { from { transform: translate(-240%, 0); } to { transform: translate(270%, 0); } }
 @keyframes cloud-high { from { transform: translate(-300%, 0); } to { transform: translate(140%, 0); } }
 @media (prefers-reduced-motion: reduce) { .cloud { animation: none; will-change: auto; } }
+
+/* ===== 信纸面板（右 1/3）与折叠飞出动效 ===== */
+.desk {
+  position: absolute; z-index: 8; right: 4.5vw; top: 50%;
+  width: min(24vw, 380px); min-width: 300px;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+}
+.desk[hidden] { display: none; }
+.desk.is-entering { animation: desk-in 480ms cubic-bezier(.22,.9,.3,1) both; }
+@keyframes desk-in {
+  from { opacity: 0; transform: translateY(-50%) translateX(26px) rotate(1.2deg); }
+  to { opacity: 1; transform: translateY(-50%) translateX(0) rotate(0); }
+}
+.paper-stage { perspective: 1100px; width: 100%; }
+.paper {
+  position: relative; width: 100%; aspect-ratio: 5 / 6.4;
+  transform-style: preserve-3d;
+  transform: rotate(-.5deg);
+  transition: transform 620ms ease-in, opacity 520ms ease-in;
+  filter: drop-shadow(0 10px 18px rgba(96, 70, 44, .14));
+}
+.paper-half { position: absolute; left: 0; width: 100%; height: 50%; transform-style: preserve-3d; }
+.paper-half--top { top: 0; transform-origin: 50% 100%; transition: transform 700ms cubic-bezier(.55,.06,.35,1); }
+.paper-half--bottom { top: 50%; transform-origin: 50% 0; transition: transform 750ms cubic-bezier(.55,.06,.35,1); }
+.paper-face {
+  position: absolute; inset: 0; overflow: hidden;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: #fdfaf2;
+  border: 1.5px solid rgba(146, 116, 84, .55);
+}
+.paper-half--top .paper-face { border-radius: 3px 7px 2px 5px / 5px 3px 0 0; border-bottom-style: dashed; border-bottom-color: rgba(146,116,84,.3); }
+.paper-half--bottom .paper-face { border-radius: 0 0 4px 6px / 0 0 5px 3px; border-top: 0; }
+.paper-face--back {
+  transform: rotateX(180deg);
+  background:
+    linear-gradient(rgba(120, 92, 62, .05), rgba(120, 92, 62, .11)),
+    #f7f1e3;
+  border-bottom-style: solid;
+}
+/* 翻面后成为可见面，需恢复完整描边（正反两面翻转相抵，其 top 边即在视觉顶部） */
+.paper-half--bottom .paper-face--back {
+  border-top: 1.5px solid rgba(146, 116, 84, .55);
+  border-radius: 3px 5px 4px 6px / 4px 3px 5px 3px;
+}
+.paper-sheet {
+  position: absolute; left: 0; width: 100%; height: 200%; padding: 26px 24px;
+  background: repeating-linear-gradient(to bottom, transparent 0 31px, rgba(150, 120, 90, .30) 31px 32px);
+  background-position: 0 26px;
+}
+.paper-half--bottom .paper-sheet { top: -100%; }
+.paper-text {
+  margin: 0; white-space: pre-wrap; word-break: break-word;
+  font: 400 clamp(15px, 1.1vw, 18px)/32px 'Xingkai SC', 'STXingkai', 'Xingkai', 'Kaiti SC', 'STKaiti', 'Songti SC', serif;
+  color: #5d4936; letter-spacing: .08em;
+}
+.paper-input {
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 26px 24px;
+  border: 1.5px solid rgba(146, 116, 84, .55); border-radius: 3px 7px 4px 6px / 5px 3px 6px 4px;
+  background: repeating-linear-gradient(to bottom, transparent 0 31px, rgba(150, 120, 90, .30) 31px 32px), #fdfaf2;
+  background-position: 0 26px, 0 0;
+  font: 400 clamp(15px, 1.1vw, 18px)/32px 'Xingkai SC', 'STXingkai', 'Xingkai', 'Kaiti SC', 'STKaiti', 'Songti SC', serif;
+  color: #5d4936; letter-spacing: .08em; resize: none; outline: none;
+  caret-color: #8a6a48;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.paper-input::placeholder { color: rgba(140, 112, 82, .55); }
+.paper-input:focus { border-color: rgba(146, 116, 84, .8); box-shadow: 0 0 0 3px rgba(160, 128, 92, .10); }
+.paper.is-folding .paper-input { display: none; }
+.desk.is-folding .fold-button { opacity: 0; pointer-events: none; }
+
+/* 我的回信 / 别人的烦恼：同一张信纸，只读或上半读+下半回 */
+.paper-read, .paper-share {
+  position: absolute; inset: 0; overflow: hidden;
+  border: 1.5px solid rgba(146, 116, 84, .55); border-radius: 3px 7px 4px 6px / 5px 3px 6px 4px;
+  background: repeating-linear-gradient(to bottom, transparent 0 31px, rgba(150, 120, 90, .30) 31px 32px), #fdfaf2;
+  background-position: 0 26px, 0 0;
+}
+.paper-read[hidden], .paper-share[hidden] { display: none; }
+.letter-date {
+  margin: 0 0 6px; text-align: right; color: rgba(93, 73, 54, .82);
+  font: 400 clamp(13px, .95vw, 15px)/32px 'Xingkai SC', 'STXingkai', 'Xingkai', 'Kaiti SC', 'STKaiti', 'Songti SC', serif;
+  letter-spacing: .08em;
+}
+.letter-body {
+  margin: 0; white-space: pre-wrap; word-break: break-word;
+  font: 400 clamp(15px, 1.1vw, 18px)/32px 'Xingkai SC', 'STXingkai', 'Xingkai', 'Kaiti SC', 'STKaiti', 'Songti SC', serif;
+  color: #5d4936; letter-spacing: .08em;
+}
+.letter-reply {
+  margin: 14px 0 0; padding-top: 6px; border-top: 1px dashed rgba(146, 116, 84, .45);
+  font: 400 clamp(15px, 1.1vw, 18px)/32px 'Xingkai SC', 'STXingkai', 'Xingkai', 'Kaiti SC', 'STKaiti', 'Songti SC', serif;
+  color: #5d4936; letter-spacing: .08em;
+}
+.letter-reply-label { color: rgba(93, 73, 54, .62); }
+.paper-read { padding: 26px 24px; }
+.paper-share { display: flex; flex-direction: column; }
+.share-top { padding: 26px 24px 0; flex: 0 0 auto; }
+.share-input {
+  flex: 1; margin: 14px 0 0; padding: 6px 24px 16px;
+  border: 0; border-top: 1px dashed rgba(146, 116, 84, .45);
+  background: none; resize: none; outline: none;
+  font: 400 clamp(15px, 1.1vw, 18px)/32px 'Xingkai SC', 'STXingkai', 'Xingkai', 'Kaiti SC', 'STKaiti', 'Songti SC', serif;
+  color: #5d4936; letter-spacing: .08em; caret-color: #8a6a48;
+}
+.share-input::placeholder { color: rgba(140, 112, 82, .55); }
+.paper.is-fold-1 .paper-half--bottom { transform: rotateX(-179.5deg); z-index: 2; }
+.paper.is-vanish { transform: rotate(-10deg) translateY(19%) scale(.16); opacity: 0; }
+.fold-button {
+  font: 400 clamp(13px, .95vw, 16px)/1 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  letter-spacing: .18em; color: #6c5848; cursor: pointer;
+  background: none; border: 0; padding: 10px 6px 12px;
+  transition: color 180ms ease, transform 180ms ease, opacity 200ms ease;
+}
+.fold-button:hover:not(:disabled) { color: #4a3a2c; transform: translateY(-2px); }
+.fold-button:disabled { opacity: .38; cursor: default; }
+
+/* 飞行中的纸飞机 */
+.flight-plane {
+  position: fixed; z-index: 9; left: 0; top: 0; width: 118px;
+  pointer-events: none; opacity: 0; will-change: transform;
+  filter: drop-shadow(3px 7px 6px rgba(96, 70, 44, .18));
+}
+.flight-plane img { display: block; width: 100%; user-select: none; }
+
+/* 窗户右下角的呼吸投放区：只有弥散阴影 */
+.launch-zone {
+  position: absolute; z-index: 6;
+  left: 62.5%; top: 61.5%;
+  width: 9%; aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none;
+  animation: zone-breathe 2.8s ease-in-out infinite;
+}
+.launch-zone[hidden] { display: none; }
+.launch-zone::before {
+  content: ''; position: absolute; inset: -22%; z-index: -1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(122, 94, 66, .30), rgba(122, 94, 66, .12) 55%, transparent 76%);
+  filter: blur(8px);
+}
+.zone-text {
+  width: max-content;
+  text-align: center;
+  transition: opacity 200ms ease;
+  color: #55422f;
+  text-shadow: 0 0 3px rgba(255, 253, 247, .95), 0 0 7px rgba(255, 253, 247, .85), 0 0 12px rgba(255, 253, 247, .7), 0 1px 2px rgba(255, 253, 247, .9);
+  font: 400 clamp(11px, .85vw, 14px)/1.6 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  letter-spacing: .1em;
+}
+.launch-zone.is-armed::before {
+  background: radial-gradient(closest-side, rgba(122, 94, 66, .42), rgba(122, 94, 66, .17) 55%, transparent 76%);
+}
+.launch-zone.is-armed .zone-text { opacity: 0; }
+.launch-zone.is-done { transition: opacity 450ms ease; opacity: 0; animation-play-state: paused; }
+@keyframes zone-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: .75; }
+  50% { transform: translate(-50%, -50%) scale(1.09); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-zone { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desk.is-entering { animation: none; }
+  .paper, .paper-half--top, .paper-half--bottom { transition-duration: 120ms; }
+}
+
+.credit {
+  position: absolute; z-index: 8; right: 12px; bottom: 9px; margin: 0;
+  font: 400 10.5px/1.4 Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  color: rgba(110, 105, 98, .5); letter-spacing: .03em;
+}
