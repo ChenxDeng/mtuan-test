@@ -27,10 +27,10 @@ button { font: inherit; }
   outline: none; touch-action: manipulation; overflow: visible;
   /* A stationary hit area prevents a lifted object from losing hover. */
 }
-.keepsake--pink { left: 38.23529%; top: 73.19915%; width: 6.30252%; height: 9.32203%; }
-.keepsake--history { left: 30.97239%; top: 75.42373%; width: 6.30252%; height: 5.99194%; }
-.keepsake--blue { left: 45.19808%; top: 73.83475%; width: 6.30252%; height: 8.47458%; }
-.keepsake--letter { left: 52.94118%; top: 73.19915%; width: 14.64586%; height: 9.53390%; }
+.keepsake--pink { left: 41%; top: 73.19915%; width: 6.30252%; height: 9.32203%; }
+.keepsake--history { left: 32.5%; top: 75.42373%; width: 6.30252%; height: 5.99194%; }
+.keepsake--blue { left: 47.4%; top: 73.83475%; width: 6.30252%; height: 8.47458%; }
+.keepsake--letter { left: 55.4%; top: 73.19915%; width: 14.64586%; height: 9.53390%; }
 .keepsake:focus-visible { outline: 1px dashed #937960; outline-offset: 7px; }
 .keepsake.is-awake { z-index: 5; }
 .object-body, .object-shadow { position: absolute; inset: 0; display: block; pointer-events: none; }
@@ -266,9 +266,24 @@ button { font: inherit; }
 .history-meta time { font-variant-numeric: tabular-nums; letter-spacing: .08em; }
 .history-meta span { color: #8c9280; }
 .history-list p { margin: 4px 0 0; }
-.history-summary { flex-shrink: 0; }
+.history-summary {
+  flex-shrink: 0; padding: 15px 14px 10px;
+  background: rgba(176, 187, 157, .16);
+  border: 1px solid rgba(131, 146, 113, .24);
+  border-radius: 4px 9px 5px 7px / 7px 4px 8px 5px;
+  color: #62684f;
+}
+.history-summary-title {
+  margin: 0 0 10px; font-size: 14px; font-weight: 500; letter-spacing: .12em;
+  color: #6c785b;
+}
 .history-summary p { margin: 4px 0; font-size: 12px; }
-.history-summary .history-stats { display: flex; justify-content: space-between; margin: 0 0 13px; color: #927a62; font-size: 11px; }
+.history-summary .history-stats {
+  display: flex; justify-content: space-between; gap: 8px;
+  margin: 0 0 11px; padding-bottom: 9px;
+  border-bottom: 1px solid rgba(131, 146, 113, .22);
+  color: #7a836b; font-size: 11px;
+}
 .history-summary small { display: block; margin-top: 12px; color: #b1a28e; font-size: 10px; text-align: right; }
 @media (prefers-reduced-motion: reduce) { .history-panel { animation: none; } }
 
